@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
+import Image from './components/image_list/ImageList';
+import TopRatedMovies from './components/image_list/TopRatedMovies';
+import TreadingMovies from './components/image_list/TreadingMovies';
+import UpComingMovies from './components/image_list/UpcomingMovies';
+import Footer from './components/layout/Footer';
+
+// import './App.css';
+import Header from './components/layout/Headeer';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <TreadingMovies />
+      <Image />
+      <UpComingMovies />
+      <TopRatedMovies />
+      <Footer />
+      
     </div>
   );
 }
