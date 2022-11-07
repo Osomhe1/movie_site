@@ -4,7 +4,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import Image from './components/image_list/ImageList';
 import TopRatedMovies from './components/image_list/TopRatedMovies';
-import TreadingMovies from './components/image_list/TreadingMovies';
+import TrendingMovies from './components/image_list/TrendingMovies';
 import UpComingMovies from './components/image_list/UpcomingMovies';
 import Footer from './components/layout/Footer';
 
@@ -16,7 +16,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <TreadingMovies />
+      <TrendingMovies />
       <Image />
       <UpComingMovies />
       <TopRatedMovies />
