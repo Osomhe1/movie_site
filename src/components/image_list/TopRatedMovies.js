@@ -1,100 +1,150 @@
-import * as React from 'react'
+import  React, { useEffect, useState } from 'react'
 import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
-import { Box, Container } from '@mui/material'
-import Pagination from '@mui/material/Pagination'
-// import Search from './SearchMovies'
+import { Box, Container, IconButton, ImageListItemBar, Typography } from '@mui/material'
+import axios from 'axios'
+import Moment from 'react-moment'
 
 export default function TopRatedMovies() {
+
+  const [rated, setRated] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [currentpage, setCurrentpage] = useState(1)
+  const IMAGE_PATH = 'https://image.tmdb.org/t/p/w1280'
+
+   useEffect(() => {
+     const fun = async () => {
+       try {
+         const response = await axios.get(
+           `https://api.themoviedb.org/3/movie/top_rated?api_key=a0f1f6057234b63753542ad9f7ce93bb&language=en-US&page=${currentpage}`
+         )
+         console.log(response?.data)
+         setRated(response?.data.results)
+         setLoading(true)
+       } catch (error) {
+         console.log(error.message, 'error')
+         alert(error.message)
+       }
+     }
+
+     fun()
+   }, [])
+
+   if (!rated) return null
+
   return (
     <>
-      {/* // rowHeight={164} height: 450, */}
       {/* <Search /> */}
       <Box>
-        <h2 className='text-center text-lg font-bold border-b-2 ' >Top Rated Movies</h2>
+        <h2 className='text-center text-lg font-bold border-b-2 '>
+          Top Rated Movies
+        </h2>
       </Box>
       <Container maxWidth='xl' className='p-5'>
         <ImageList sx={{ width: '100%', objectFit: 'cover' }} cols={5}>
-          {itemData.map((item) => (
-            <Box>
-              <ImageListItem key={item.img}>
-                <img
-                  src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                  srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                  alt={item.title}
-                  loading='lazy'
-                />
-              </ImageListItem>
-            </Box>
-          ))}
+          {loading &&
+            rated.map((item) => (
+              <Box>
+                <ImageListItem key={item?.id}>
+                  <img
+                    src={IMAGE_PATH + item?.poster_path}
+                    srcSet={`${item?.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                    alt={item?.title}
+                    loading='lazy'
+                  />
+                  <ImageListItemBar
+                    title={item.title}
+                    subtitle={item.author}
+                    // rate={item?.vote_average}
+                    actionIcon={
+                      <IconButton
+                        sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                        aria-label={`info about ${item.title}`}
+                      >
+                        {/* <InfoIcon /> */}
+                      </IconButton>
+                    }
+                  />
+                  <div className='flex justify-between text-xs mt-2 mx-1 font-semibold'>
+                    {item?.vote_average > 5 ? (
+                      <h1 className='flex text-gray-300 font-bold'>
+                        <span className='text-green-600'>
+                          Rating: {item?.vote_average}
+                        </span>
+                      </h1>
+                    ) : (
+                      <h1 className='flex text-gray-300 font-bold'>
+                        <span className='text-red-600'>
+                          Rating: {item?.vote_average}
+                        </span>
+                      </h1>
+                    )}
+
+                    <h1>
+                      <Moment format='yyyy'>{item?.release_date}</Moment>
+                    </h1>
+                  </div>
+                </ImageListItem>
+              </Box>
+            ))}
         </ImageList>
-        <Box className='py-6 w-[300px] m-auto '>
-          <Pagination count={5} color='secondary' />
+
+        <Box className='py-6 w-[500px] m-auto '>
+          {/* page button */}
+          <div className='flex  justify-center mt-4  space-x-4 pb-10'>
+            
+            <button
+              onClick={() => {
+                if (currentpage === 1) {
+                  return
+                } else {
+                  setCurrentpage(currentpage - 1)
+                }
+              }}
+            >
+              <span class='sr-only'>Previous</span>
+              <svg
+                aria-hidden='true'
+                class='w-5 h-5'
+                fill='currentColor'
+                viewBox='0 0 20 20'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path
+                  fill-rule='evenodd'
+                  d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
+                  clip-rule='evenodd'
+                ></path>
+              </svg>
+            </button>
+            <Typography
+              variant='h6'
+              component='h6'
+              className='bg-purple-700 text-white p-2 h-[40px] w-[40px] text-center rounded-[50%]'
+            >
+              {currentpage}
+            </Typography>
+
+            <button onClick={() => setCurrentpage(currentpage + 1)}>
+              <span class='sr-only'>Next</span>
+              <svg
+                aria-hidden='true'
+                class='w-5 h-5'
+                fill='currentColor'
+                viewBox='0 0 20 20'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path
+                  fill-rule='evenodd'
+                  d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
+                  clip-rule='evenodd'
+                ></path>
+              </svg>
+            </button>
+          </div>
         </Box>
       </Container>
     </>
   )
 }
 
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: 'Mushrooms',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: 'Tomato basil',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-    title: 'Sea star',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-    title: 'Bike',
-  },
-]

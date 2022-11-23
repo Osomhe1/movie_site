@@ -8,29 +8,34 @@ import { useState } from "react";
 
 function Item({ item }) {
 
-  const [trend, setTrend] = useState(null)
+  const [trends, setTrends] = useState(null)
 
-  var config = {
-    method: 'get',
-    url: 'https://api.themoviedb.org/3/trending/all/day?api_key=a0f1f6057234b63753542ad9f7ce93bb',
-    headers: {},
-  }
+  // var config = {
+  //   method: 'get',
+  //   url: 'https://api.themoviedb.org/3/trending/all/day?api_key=a0f1f6057234b63753542ad9f7ce93bb',
+  //   headers: {},
+  // }
 
   useEffect(() => {
  
-    axios.get(config)
-      .then( (response) => {
-        console.log((response.data))
-        setTrend(response.data)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
 
+    const fun = async () =>{
+      try{
 
+        const response = await axios.get(`https://api.themoviedb.org/3/trending/all/day?api_key=a0f1f6057234b63753542ad9f7ce93bb`)
+        console.log(response?.data)
+        setTrends(response?.data.results)
+      }catch (error){
+        console.log(error.message)
+      }
+
+    }
+
+  fun()
   }, [])
   
-  if(!trend) return null;
+  if(!trends) return null;
+ const IMAGE_PATH = "https://image.tmdb.org/t/p/w1280";
 
   return (
     <div style={{ width: '100%' }}>
@@ -57,7 +62,10 @@ function Item({ item }) {
               key={item.img}
               id='movies'
               className=' h-[250px] md:h-[400px] object-cover object-center  '
-              src={item.img}
+              // src={item.img}
+              // src={`${IMAGE_PATH}${trend.backdrop_path}`}
+              src={IMAGE_PATH + trends.backdrop_path}
+              // src={`https://image.tmdb.org/t/p/w185/${trend.poster_path}`}
               // absolute src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60'
               // src='https://plus.unsplash.com/premium_photo-1661281434999-01f7de9098e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60'
               alt=' description'
