@@ -11,7 +11,7 @@ export default function UpComingMovies() {
 
 
   
-
+// let params = useParam()
   
   const [upcomingMovies, setUpcomingMovies] = useState([])
   const [loading, setLoading] = useState(false)
