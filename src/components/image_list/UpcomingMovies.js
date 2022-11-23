@@ -2,17 +2,12 @@ import  React, {useEffect, useState} from 'react'
 import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
 import { Box, Container, Typography } from '@mui/material'
-// import Pagination from '@mui/material/Pagination'
-// import Search from './SearchMovies'
 import axios from 'axios'
 import Moment from 'react-moment'
 
 export default function UpComingMovies() {
 
 
-  
-// let params = useParam()
-  
   const [upcomingMovies, setUpcomingMovies] = useState([])
   const [loading, setLoading] = useState(false)
   const [currentpage, setCurrentpage] = useState(1)
